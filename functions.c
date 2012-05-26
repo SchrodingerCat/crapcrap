@@ -5,14 +5,45 @@
 #include "functions.h"
 
 /* fun init_mat
- *
  */
-int** init_mat(int w, int h) {
+int** init_mat(int w, int h) 
+{
   int i;
   int** laby;
   laby = malloc(sizeof(int) * w);
   for(i=0;i<h;i++) {
     laby[i] = malloc(sizeof(int) * h);
+  }
+  return laby;
+}
+
+/* fun init_mur
+ * arg w : largeur
+ * arg h : hauteur
+ */
+int** init_mur(int** laby, int w, int h) 
+{
+  int i,j;
+  for(i=0 ; i<h ; i++) {
+    for(j=0 ; j<w ; j++) {
+      laby[i][j] = 1;
+    }
+  }
+  return laby;
+}
+
+/* fun init_bord
+ * arg w : largeur
+ * arg h : hauteur
+ */
+int** init_bord(int** laby, int w, int h) {
+  int i,j;
+  for(i=0 ; i<h ; i++) {
+    for(j=0 ; j<w ; j++) {
+      if((i==0) || (j==0) || (i==h-1) || (j==w-1)) {
+        laby[i][j] = 2;
+      }   
+    }
   }
   return laby;
 }
@@ -95,38 +126,6 @@ void show_freq(int** freq, int w, int h) {
   }
 }
 
-/* fun next_dir : indique la nouvelle direction
- * arg actual_dir : direction actuelle
- *      Nord : 0
- * Ouest : 3 | Est : 1
- *     Sud : 2
- */
-int next_dir(int actual_dir) {
-  int alea = rand()%10;
-  int new_dir;
-
-  if(alea==0) {
-    if(actual_dir==0){
-      new_dir = 3;
-    }
-    else{
-      new_dir = actual_dir - 1;
-    }
-  }
-  else if(alea==1) {
-    if(actual_dir==3){
-      new_dir = 0;
-    }
-    else{
-      new_dir = actual_dir + 1;
-    }
-  }
-  else{
-    new_dir = actual_dir;
-  }
-  return new_dir;
-}
-
 /* fun next_col
 */ 
 int next_col(int pos_x, int dir) {
@@ -154,36 +153,6 @@ int next_line(int pos_y, int dir) {
   }
 }
 
-/* fun init_mur
- * arg w : largeur
- * arg h : hauteur
- *
- */
-int** init_mur(int** laby, int w, int h) {
-  int i,j;
-  for(i=0 ; i<h ; i++) {
-    for(j=0 ; j<w ; j++) {
-      laby[i][j] = 1;
-    }
-  }
-  return laby;
-}
-
-/* fun init_bord
- * arg w : largeur
- * arg h : hauteur
- */
-int** init_bord(int** laby, int w, int h) {
-  int i,j;
-  for(i=0 ; i<h ; i++) {
-    for(j=0 ; j<w ; j++) {
-      if((i==0) || (j==0) || (i==h-1) || (j==w-1)) {
-        laby[i][j] = 2;
-      }   
-    }
-  }
-  return laby;
-}
 
 /* fun cherche_mur : recherche un mur
  * arg w : largeur
@@ -211,102 +180,6 @@ int cherche_mur(int** laby, int w, int h) {
   return ((100*coord_x) + coord_y);
 }
 
-/* fun cherche_mur_ecart : recherche d'un mur entouré de murs au N,S,E,O
- * arg w : largeur
- * arg h : hauteur
- *
- */
-int cherche_mur_ecart(int** laby, int w, int h) {
-  int there_is_mur_autour = 0;
-  int c, coord_y, coord_x;
-
-  while( !(there_is_mur_autour == 1)){
-    c = cherche_mur(laby,w,h);
-    //if(c==0) {
-    //  return 0;
-    //}
-    coord_y = c%100;
-    coord_x = (c-(c%100))/100;
-    if((laby[coord_y-1][coord_x] == 1) && (laby[coord_y+1][coord_x] == 1) && (laby[coord_y][coord_x-1] == 1) && (laby[coord_y][coord_x+1] == 1) ) {
-      there_is_mur_autour = 1;
-    }
-  }
-  return c;
-}
-
-/* fun dig_a_track : creuse un chemin a partir d'un mur
- * arg w : largeur
- * arg h : hauteur
- * arg c_x : coordonnée du mur largeur
- * arg c_y : coordonnée du mur hauteur
- * ret : le nombre de mur creusé
- */
-int dig_a_track(int** laby, int w, int h, int c_y, int c_x) {
-  int direction = rand()%4;
-  int touche_bord = 0;
-  int touche_vide = 0;
-  int prochain_x;
-  int prochain_y;
-  int dig_count = 0;
-  laby[c_y][c_x] = 0;
-
-  while( !((touche_bord==1) || (touche_vide==1)) ) {
-    prochain_x = next_col(c_x,direction);
-    prochain_y = next_line(c_y,direction);
-
-    if(laby[prochain_y][prochain_x] == 2) {
-      touche_bord = 1;
-    } 
-    else if(laby[prochain_y][prochain_x] == 0) {
-      touche_vide = 1;
-    } 
-    else {
-      laby[prochain_y][prochain_x] = 0;
-      c_x = prochain_x;
-      c_y = prochain_y;
-      direction = next_dir(direction);  
-      dig_count++;
-    }
-  }
-  return dig_count;
-}
-
-/* fun creuse_laby : 
- *
- */
-int** creuse_laby(int** laby, int w, int h) {
-  int count_digged = 0;
-  int coord, coord_x, coord_y;
-  float max_creux;
-
-  //on creuse l'entrée
-  count_digged = count_digged + dig_a_track(laby, w, h, 1 , 1);
-  printf("\n");
-  show_laby(laby,w,h); 
-  //on creuse a la sortie
-  count_digged = count_digged + dig_a_track(laby, w, h, w-2 , h-2);
-  printf("\n");
-  show_laby(laby,w,h); 
-  //améliorer
-  max_creux = (((w-1)*(h-1))/2.5);
-  printf("%f", max_creux);
-  while(count_digged <= max_creux ) {
-    coord = cherche_mur_ecart(laby, w, h);
-    //if(coord == 0) {
-    //  printf("Impossible de creuser autant\n");
-    //  return laby;
-    //}
-    coord_y = coord%100;
-    coord_x = (coord-(coord%100))/100;
-    count_digged = count_digged + dig_a_track( laby, w, h , coord_y, coord_x);
-  }
-  ///if(count>=1000) {
-  // return laby;
-  //}
-  printf("vide : %d", count_digged);
-  printf("\n");
-  return laby;
-}
 /* fun insere_joueur : insere le joueur dans le laby
  * arg laby : le laby
  * arg w
@@ -540,26 +413,6 @@ int** fabrique_mat_frequence(int** laby, int** freq, int w, int h) {
 int** remplir_mat_frequence(int** freq, int pos_y, int pos_x) {
   freq[pos_y][pos_x] = freq[pos_y][pos_x] + 1;
   return freq;
-}
-
-/* fun creuse_rand
- * arg laby
- * arg creuse_max
- */
-
-int** creuse_rand(int** laby, int creuse_max, int w, int h) {
-  int compteur = 0;
-  int coord_y;
-  int coord_x;
-  int mur;
-  while( compteur < creuse_max ) {
-    mur = cherche_mur(laby,w,h); 
-    coord_y = mur%100;
-    coord_x = (mur-(mur%100))/100;
-    laby[coord_y][coord_x] = 0;
-    compteur++;
-  }
-  return laby;
 }
 
 /* fun trace_obstacles
