@@ -18,7 +18,6 @@ int** init_mat(int w, int h) {
 }
 
 /* fun show_laby
- *   
  * 0 : vide
  * 1 : mur
  * 2 : bord
@@ -29,32 +28,23 @@ void show_laby(int** laby, int w, int h) {
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
-      if(laby[i][j]==0)
-      {
-        //couleur("40");
-        printf(" ");
-
-      }
-      else if(laby[i][j]==1)
-      {
+      if(laby[i][j]==0) {
         couleur("40");
         printf(" ");
-
       }
-      else if(laby[i][j]==2)
-      {
+      else if(laby[i][j]==1) {
         couleur("40");
         printf(" ");
-
       }
-      else if(laby[i][j]==3)
-      {
+      else if(laby[i][j]==2) {
+        couleur("40");
+        printf(" ");
+      }
+      else if(laby[i][j]==3) {
         //couleur("32;40");
         printf("C");
-
       }
-      else if(laby[i][j]==4)
-      {
+      else if(laby[i][j]==4) {
         couleur("45");
         printf("i");
       }
@@ -71,33 +61,26 @@ void show_freq(int** freq, int w, int h) {
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
-      if((freq[i][j]==-2)) 
-      {
+      if((freq[i][j]==-2)) {
         couleur("40");
         printf(" ");
-
-      }
-      else if(freq[i][j]==-1)
-      { 
+      } 
+      else if(freq[i][j]==-1) { 
         couleur("40");
         printf(" ");
-        
       }
-      else if(freq[i][j]==0)
-      {
+      else if(freq[i][j]==0) {
         printf(" ");
       }
-      else if(freq[i][j]<=15)
-      {
+      else if(freq[i][j]<=15) {
         couleur("46");
         printf(" ");
       }
-      else if(freq[i][j]<=30)
-      {
+      else if(freq[i][j]<=30) {
         couleur("42");
         printf(" ");
       }
-      else if(freq[i][j]<=50){
+      else if(freq[i][j]<=50) {
         couleur("43");
         printf(" ");
       }
@@ -426,9 +409,8 @@ int est_case_vide(int** laby, int direction, int old_y, int old_x) {
  * arg h : hauteur
  * arg old_x
  * arg old_y
- * arg old_dir
  */
-int ia_cherche_deplacement(int** laby, int old_y, int old_x, int old_dir) {
+int ia_cherche_deplacement(int** laby, int old_y, int old_x) {
   int deplacement_possible = 0;
   int test_direction;
   int count = 0;
@@ -530,8 +512,7 @@ int ia_nouveau_deplacement_rand(int** laby, int old_y, int old_x, int old_dir) {
  * 0  : cases vides  
  * arg laby : la matrice du jeu
  */
-int** fabrique_mat_frequence(int** laby, int w, int h) {
-  int** freq = init_mat(w,h);
+int** fabrique_mat_frequence(int** laby, int** freq, int w, int h) {
   int i,j;
 
   for(i=0;i<h;i++) {
