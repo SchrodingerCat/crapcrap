@@ -36,7 +36,8 @@ int** init_mur(int** laby, int w, int h)
  * arg w : largeur
  * arg h : hauteur
  */
-int** init_bord(int** laby, int w, int h) {
+int** init_bord(int** laby, int w, int h)
+{
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
@@ -55,7 +56,8 @@ int** init_bord(int** laby, int w, int h) {
  * 3 : joueur
  * 4 : ia
  */
-void show_laby(int** laby, int w, int h) {
+void show_laby(int** laby, int w, int h)
+{
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
@@ -88,7 +90,8 @@ void show_laby(int** laby, int w, int h) {
 /* fun show_freq
  * affiche les frequences d'appartition de l'ia par case
  */
-void show_freq(int** freq, int w, int h) {
+void show_freq(int** freq, int w, int h)
+{
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
@@ -128,7 +131,8 @@ void show_freq(int** freq, int w, int h) {
 
 /* fun next_col
 */ 
-int next_col(int pos_x, int dir) {
+int next_col(int pos_x, int dir)
+{
   if((dir==0) || (dir==2)) {
     return pos_x;
   }
@@ -141,7 +145,8 @@ int next_col(int pos_x, int dir) {
 }
 /* fun next_line
 */ 
-int next_line(int pos_y, int dir) {
+int next_line(int pos_y, int dir)
+{
   if((dir==3) || (dir==1)) {
     return pos_y;
   }
@@ -160,7 +165,8 @@ int next_line(int pos_y, int dir) {
  * si (x,y) est un mur alors 
  * retourne c = (100*x) + y
  */
-int cherche_mur(int** laby, int w, int h) {
+int cherche_mur(int** laby, int w, int h)
+{
   int coord_x = 0;
   int coord_y = 0;
   int is_a_mur = 0;
@@ -187,7 +193,8 @@ int cherche_mur(int** laby, int w, int h) {
  * pos_x : position joueur en x
  * pos_y : position joueur en y
  */
-int** insere_joueur(int** laby, int w, int h, int pos_y, int pos_x) {
+int** insere_joueur(int** laby, int w, int h, int pos_y, int pos_x)
+{
   laby[pos_y][pos_x] = 3;
   return laby;
 }
@@ -198,7 +205,8 @@ int** insere_joueur(int** laby, int w, int h, int pos_y, int pos_x) {
  * arg h : hauteur
  * renvoit une coordonée sous la forme (100*x) +y
  */
-int cherche_vide(int** laby, int w, int h) {
+int cherche_vide(int** laby, int w, int h)
+{
   int trouve_vide = 0;
   int x,y,c;
   while( !(trouve_vide == 1) ) {
@@ -219,7 +227,8 @@ int cherche_vide(int** laby, int w, int h) {
  * pos_x : position joueur en x
  * pos_y : position joueur en y
  */
-int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x) {
+int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x)
+{
   laby[pos_y][pos_x] = 4;
   return laby;
 }
@@ -232,7 +241,8 @@ int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x) {
  * arg old_x
  * arg direction
  */
-int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction) {
+int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction)
+{
   laby[old_y][old_x] = 0;
   if(direction == 0) {
     //nord
@@ -265,7 +275,8 @@ int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction) 
  * 1 si vide
  * 0 si non-vide
  */
-int est_case_vide(int** laby, int direction, int old_y, int old_x) {
+int est_case_vide(int** laby, int direction, int old_y, int old_x)
+{
   int colonne = next_col(old_x, direction);
   int ligne = next_line(old_y, direction);
   if(laby[ligne][colonne] == 0) {
@@ -283,7 +294,8 @@ int est_case_vide(int** laby, int direction, int old_y, int old_x) {
  * arg old_x
  * arg old_y
  */
-int ia_cherche_deplacement(int** laby, int old_y, int old_x) {
+int ia_cherche_deplacement(int** laby, int old_y, int old_x)
+{
   int deplacement_possible = 0;
   int test_direction;
   int count = 0;
@@ -327,7 +339,8 @@ int ia_cherche_deplacement(int** laby, int old_y, int old_x) {
  * arg old_dir
  * retourne une direction
  */
-int ia_nouveau_deplacement_rand(int** laby, int old_y, int old_x, int old_dir) {
+int ia_nouveau_deplacement_rand(int** laby, int old_y, int old_x, int old_dir)
+{
   int maxliberte = 10;
   int liberte = rand()%(100)+1;
   if(est_case_vide(laby,old_dir,old_y,old_x) && liberte > maxliberte) {
@@ -385,7 +398,8 @@ int ia_nouveau_deplacement_rand(int** laby, int old_y, int old_x, int old_dir) {
  * 0  : cases vides  
  * arg laby : la matrice du jeu
  */
-int** fabrique_mat_frequence(int** laby, int** freq, int w, int h) {
+int** fabrique_mat_frequence(int** laby, int** freq, int w, int h)
+{
   int i,j;
 
   for(i=0;i<h;i++) {
@@ -410,7 +424,8 @@ int** fabrique_mat_frequence(int** laby, int** freq, int w, int h) {
  * arg pos_y :
  * arg pos_x :  
  */
-int** remplir_mat_frequence(int** freq, int pos_y, int pos_x) {
+int** remplir_mat_frequence(int** freq, int pos_y, int pos_x)
+{
   freq[pos_y][pos_x] = freq[pos_y][pos_x] + 1;
   return freq;
 }
@@ -420,7 +435,8 @@ int** remplir_mat_frequence(int** freq, int pos_y, int pos_x) {
  * w : largeur
  * h : hauteur
  */
-int** trace_obstacles(int** laby, int w, int h) {
+int** trace_obstacles(int** laby, int w, int h)
+{
   int i,j;
   int test_ligne = 1;
   int test_colonne = 1;
