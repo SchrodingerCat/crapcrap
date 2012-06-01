@@ -46,15 +46,18 @@ int main()
   freq = remplir_mat_frequence(freq,y,x);
 
   //autres déplacements
-  compteur_deplacement = 0;
+  compteur_deplacement = -1;
   while(compteur_deplacement<10000) {
-    direction = ia_nouveau_deplacement_rand(laby,y,x,direction);
+    direction = ia_dir_relative_to_absolue(laby , direction , ia_dir_relative(laby , y , x , direction) );
     laby = deplace_ia(laby,w,h,y,x, direction );
     x = next_col(x, direction);
     y = next_line(y, direction);
     freq = remplir_mat_frequence(freq,y,x);
     printf("déplacements : %d\n", compteur_deplacement++);
+    //show_laby(laby,w,h);
+    show_freq(freq , w , h , compteur_deplacement);
+    usleep(25000);
   }
-  show_freq(freq,w,h);
+  show_freq(freq , w , h , compteur_deplacement);
   return 0;
 }

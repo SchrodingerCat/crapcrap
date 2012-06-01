@@ -62,7 +62,7 @@ void show_laby(int** laby, int w, int h)
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
       if(laby[i][j]==0) {
-        couleur("40");
+        //couleur("40");
         printf(" ");
       }
       else if(laby[i][j]==1) {
@@ -90,8 +90,11 @@ void show_laby(int** laby, int w, int h)
 /* fun show_freq
  * affiche les frequences d'appartition de l'ia par case
  */
-void show_freq(int** freq, int w, int h)
+void show_freq(int** freq, int w, int h, int total_deplacement)
 {
+  double seuil_bleu = 0.15;
+  double seuil_vert = 0.30;
+  double seuil_orange = 0.50;
   int i,j;
   for(i=0 ; i<h ; i++) {
     for(j=0 ; j<w ; j++) {
@@ -106,15 +109,15 @@ void show_freq(int** freq, int w, int h)
       else if(freq[i][j]==0) {
         printf(" ");
       }
-      else if(freq[i][j]<=15) {
+      else if( (( (double)freq[i][j])/total_deplacement) <= seuil_bleu/100) {
         couleur("46");
         printf(" ");
       }
-      else if(freq[i][j]<=30) {
+      else if( (( (double)freq[i][j])/total_deplacement) <= seuil_vert/100) {
         couleur("42");
         printf(" ");
       }
-      else if(freq[i][j]<=50) {
+      else if( (( (double)freq[i][j])/total_deplacement) <= seuil_orange/100) {
         couleur("43");
         printf(" ");
       }
@@ -122,7 +125,6 @@ void show_freq(int** freq, int w, int h)
         couleur("41");
         printf(" ");
       }
-
       couleur("0");
     }
     printf("\n");
@@ -332,62 +334,85 @@ int ia_cherche_deplacement(int** laby, int old_y, int old_x)
 }
 
 
-/* fun ia_nouveau_deplacement_rand
- * arg laby
- * arg old_y
- * arg old_x
- * arg old_dir
- * retourne une direction
+/** fun ia_dir_relative
+ * arg laby : le labyrinthe
+ * arg old_y : position sur y
+ * arg old_x : position sur x
+ * arg old_dir : ancienne direction
+ ** renvoit une nouvelle direction possible, avec une notation relative telle que :
+ * 3 : tourne a gauche 3 fois (270°)
+ * 2 : tourne a gauche 2 fois (180°)
+ * 1 : tourne a gauche 1 fois ( 90°)
+ * 0 : garde la précédente direction
  */
-int ia_nouveau_deplacement_rand(int** laby, int old_y, int old_x, int old_dir)
+int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
 {
-  int maxliberte = 10;
-  int liberte = rand()%(100)+1;
-  if(est_case_vide(laby,old_dir,old_y,old_x) && liberte > maxliberte) {
+  int tirage = rand()%100;
+  int new_direction_relative;
+  if ( tirage < 70 && est_case_vide(laby,old_dir,old_y,old_x) ) {
+    new_direction_relative = 0;
+  }
+  //gauche
+  else if ( (tirage >= 70 && tirage < 80) && est_case_vide(laby, ia_dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
+    new_direction_relative = 1;
+  }
+  //droite
+  else if ( (tirage >= 80 && tirage < 90) && est_case_vide(laby, ia_dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
+    new_direction_relative = 3;
+  }
+  //sinon on recule
+  else {
+    new_direction_relative = 2;
+  }
+  return new_direction_relative;
+}
+
+/** fun ia_dir_relative_to_absolue
+ * arg laby : le labyrinthe
+ * arg old_dir : ancienne direction
+ * arg dir_relative : direction relative ( (0;1;2;3) où le chiffre est le nombre de rotation de 90° dans le sens anti-horaire
+ ** renvoit la direction avec la notation absolue telle que :
+ * 0 : haut
+ * 1 : droite
+ * 2 : bas
+ * 3 : gauche
+ */
+int ia_dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
+{
+  //tout droit
+  if (dir_relative == 0) {
     return old_dir;
   }
-  else {
-    int deplacement_possible = 0;
-    int test_direction;
-    int count = 0;
-    while( !(deplacement_possible == 1 || count > 10000) ) {
-      test_direction = rand()%2;
-      if(test_direction == 0) {
-        //tourne gauche
-        if((old_dir !=0) && (est_case_vide(laby,old_dir-1,old_y,old_x))){
-          test_direction = old_dir - 1;
-          deplacement_possible = 1;
-        }
-        else if( est_case_vide(laby,3,old_y,old_x) ){
-          test_direction = 3;
-          deplacement_possible = 1; 
-        }
-      }
-      else if(test_direction == 1) {
-        //tourne droite
-        if((old_dir !=3) && (est_case_vide(laby,old_dir+1,old_y,old_x))){
-          test_direction = old_dir + 1;
-          deplacement_possible = 1;
-        }
-        else if( est_case_vide(laby,0,old_y,old_x) ){
-          test_direction = 0;
-          deplacement_possible = 1; 
-        }
-      }
-    count++;
+  //tourne anti-horaire 1 fois
+  else if (dir_relative == 1) {
+    if (old_dir == 0) {
+      return 3;
     }
-    if(deplacement_possible==0 && liberte > maxliberte) {
-      if((old_dir == 0) || (old_dir == 1)) {
-        test_direction = old_dir + 2;
-      } 
+    else {
+      return (old_dir - 1);
+    }
+  }
+  //tourne anti-horaire 2 fois
+  else if (dir_relative == 2) {
+    if ( (old_dir == 0) || (old_dir == 1) ) {
+      return (old_dir + 2);
+    }
+    else {
+      return (old_dir - 2);
+    }
+  }
+  //tourne anti-horaire 3 fois
+  else if (dir_relative == 3) {
+      if (old_dir == 3) {
+        return 0;
+      }
       else {
-        test_direction = old_dir - 2;
+        return (old_dir + 1);
       }
-    }
-    else if(deplacement_possible==0) {
-      test_direction = ia_nouveau_deplacement_rand(laby,old_y,old_x,old_dir);
-    }
-    return test_direction;
+  }
+  else {
+    printf("Conversion impossible >< \n");
+    return 42;
   }
 }
 
