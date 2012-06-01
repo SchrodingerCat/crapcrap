@@ -53,10 +53,11 @@ int main()
     x = next_col(x, direction);
     y = next_line(y, direction);
     freq = remplir_mat_frequence(freq,y,x);
-    printf("déplacements : %d\n", compteur_deplacement++);
-    //show_laby(laby,w,h);
-    show_freq(freq , w , h , compteur_deplacement);
-    usleep(25000);
+    show_laby(laby,w,h);
+    compteur_deplacement++;
+    //show_freq(freq , w , h , compteur_deplacement);
+    printf("déplacements : %d\n", compteur_deplacement);
+    usleep(100000);
   }
   show_freq(freq , w , h , compteur_deplacement);
   return 0;
