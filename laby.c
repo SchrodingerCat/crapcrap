@@ -45,6 +45,9 @@ int main()
   y = next_line(y_old, direction); 
   freq = remplir_mat_frequence(freq,y,x);
 
+  //insert le joueur
+  laby = joueur_insertion(laby,w,h);
+
   //autres déplacements
   compteur_deplacement = -1;
   while(compteur_deplacement<10000) {
@@ -57,7 +60,7 @@ int main()
     compteur_deplacement++;
     //show_freq(freq , w , h , compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
-    usleep(100000);
+    usleep(50000);
   }
   show_freq(freq , w , h , compteur_deplacement);
   return 0;

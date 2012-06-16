@@ -66,11 +66,11 @@ void show_laby(int** laby, int w, int h)
         printf(" ");
       }
       else if(laby[i][j]==1) {
-        couleur("40");
+        couleur("47");
         printf(" ");
       }
       else if(laby[i][j]==2) {
-        couleur("40");
+        couleur("47");
         printf(" ");
       }
       else if(laby[i][j]==3) {
@@ -487,5 +487,18 @@ int** trace_obstacles(int** laby, int w, int h)
       test_ligne = 0;
     }
   }
+  return laby;
+}
+/* fun joueur_insertion : insert un joueur dans une case vide aléatoire
+ * arg laby : laby
+ * arg w: largeur du labyrinthe
+ * arg h: hauteur du labyrinthe
+ */
+int** joueur_insertion(int** laby, int w, int h)
+{
+  int position_vide = cherche_vide(laby,w,h);
+  int position_vide_y = position_vide%100;
+  int position_vide_x = (position_vide - (position_vide%100)) / 100;
+  laby[position_vide_y][position_vide_x] = 3;
   return laby;
 }
