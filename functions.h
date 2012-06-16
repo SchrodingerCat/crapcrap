@@ -1,3 +1,9 @@
+struct Coordonnees
+{
+  int x;
+  int y;
+};
+
 int** init_mat(int w, int h);
 int** init_mur(int** laby, int w, int h);
 int** init_bord(int** laby, int w, int h);
@@ -13,9 +19,9 @@ int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction);
 int est_case_vide(int** laby, int direction, int old_y, int old_x); 
 int ia_cherche_deplacement(int** laby, int old_y, int old_x); 
 int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir);
-int ia_dir_relative_to_absolue (int** laby , int old_dir , int dir_relative);
+int dir_relative_to_absolue (int** laby , int old_dir , int dir_relative);
 int** fabrique_mat_frequence(int** laby, int** freq, int w, int h);
 int** remplir_mat_frequence(int** freq, int pos_y, int pos_x);
 int** trace_obstacles(int** laby, int w, int h); 
-int** joueur_insertion(int** laby, int w, int h);
-
+int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur);
+void initialiser_coordonnees(struct Coordonnees* point);

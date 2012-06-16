@@ -353,11 +353,11 @@ int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
     new_direction_relative = 0;
   }
   //gauche
-  else if ( (tirage >= 70 && tirage < 80) && est_case_vide(laby, ia_dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
+  else if ( (tirage >= 70 && tirage < 80) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
     new_direction_relative = 1;
   }
   //droite
-  else if ( (tirage >= 80 && tirage < 90) && est_case_vide(laby, ia_dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
+  else if ( (tirage >= 80 && tirage < 90) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
     new_direction_relative = 3;
   }
   //sinon on recule
@@ -367,7 +367,7 @@ int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
   return new_direction_relative;
 }
 
-/** fun ia_dir_relative_to_absolue
+/** fun dir_relative_to_absolue
  * arg laby : le labyrinthe
  * arg old_dir : ancienne direction
  * arg dir_relative : direction relative ( (0;1;2;3) où le chiffre est le nombre de rotation de 90° dans le sens anti-horaire
@@ -377,7 +377,7 @@ int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
  * 2 : bas
  * 3 : gauche
  */
-int ia_dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
+int dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
 {
   //tout droit
   if (dir_relative == 0) {
@@ -415,7 +415,6 @@ int ia_dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
     return 42;
   }
 }
-
 
 /* fun fabrique_mat_frequence : renvoit une matrice contenant
  * -1 : mur
@@ -494,11 +493,35 @@ int** trace_obstacles(int** laby, int w, int h)
  * arg w: largeur du labyrinthe
  * arg h: hauteur du labyrinthe
  */
-int** joueur_insertion(int** laby, int w, int h)
+int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
 {
   int position_vide = cherche_vide(laby,w,h);
   int position_vide_y = position_vide%100;
   int position_vide_x = (position_vide - (position_vide%100)) / 100;
   laby[position_vide_y][position_vide_x] = 3;
+  (*joueur).x = position_vide_x;
+  (*joueur).y = position_vide_y;
   return laby;
 }
+
+/* fun initialiser_coordonnees
+ * arg point : structure contenant des coordonnées
+ */
+void initialiser_coordonnees(struct Coordonnees* point)
+{
+  (*point).x = 0;
+  (*point).y = 0;
+}
+
+/* fun demande_direction_relative
+ * arg laby
+ * arg joueur
+ * renvoit la direction relative du joueur
+ *
+int demande_direction_relative(int** laby, struct Coordonnees* joueur)
+{
+  int deplacement possible = 0;
+
+}
+*/
+
