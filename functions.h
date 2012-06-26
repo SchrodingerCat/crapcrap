@@ -24,4 +24,5 @@ int** fabrique_mat_frequence(int** laby, int** freq, int w, int h);
 int** remplir_mat_frequence(int** freq, int pos_y, int pos_x);
 int** trace_obstacles(int** laby, int w, int h); 
 int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur);
-void initialiser_coordonnees(struct Coordonnees* point);
+struct Coordonnees* init_struct_coord();
+

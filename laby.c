@@ -20,13 +20,12 @@ int main()
   int x_old, y_old;
   int direction;
   int compteur_deplacement;
-  struct Coordonnees joueur;
+  struct Coordonnees* joueur = init_struct_coord();
 
   laby = init_mur(laby,w,h);
   laby = init_bord(laby,w,h);
   laby = trace_obstacles(laby,w,h); 
   freq = fabrique_mat_frequence(laby,freq,w,h);
-  initialiser_coordonnees(&joueur); 
 
   //insere une ia
   position_vide = cherche_vide(laby,w,h);
@@ -45,7 +44,7 @@ int main()
   freq = remplir_mat_frequence(freq,y,x);
 
   //insert le joueur
-  laby = joueur_insertion(laby, w, h, &joueur);
+  laby = joueur_insertion(laby, w, h, joueur);
 
   //autres déplacements
   compteur_deplacement = -1;

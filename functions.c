@@ -75,7 +75,7 @@ void show_laby(int** laby, int w, int h)
       }
       else if(laby[i][j]==3) {
         //couleur("32;40");
-        printf("C");
+        printf("J");
       }
       else if(laby[i][j]==4) {
         couleur("45");
@@ -507,10 +507,13 @@ int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
 /* fun initialiser_coordonnees
  * arg point : structure contenant des coordonnées
  */
-void initialiser_coordonnees(struct Coordonnees* point)
+struct Coordonnees* init_struct_coord()
 {
-  (*point).x = 0;
-  (*point).y = 0;
+  struct Coordonnees* position = NULL;
+  position = malloc(sizeof(int)* 2);
+  position->x = 0;
+  position->y = 0;
+  return position;
 }
 
 /* fun demande_direction_relative
