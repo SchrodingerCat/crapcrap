@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 #include "couleurs.h"
 #include "functions.h"
+
 
 #define w 32
 #define h 32
