@@ -349,15 +349,15 @@ int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
 {
   int tirage = rand()%100;
   int new_direction_relative;
-  if ( tirage < 70 && est_case_vide(laby,old_dir,old_y,old_x) ) {
+  if ( tirage < 90 && est_case_vide(laby,old_dir,old_y,old_x) ) {
     new_direction_relative = 0;
   }
   //gauche
-  else if ( (tirage >= 70 && tirage < 80) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
+  else if ( (tirage >= 90 && tirage < 94) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
     new_direction_relative = 1;
   }
   //droite
-  else if ( (tirage >= 80 && tirage < 90) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
+  else if ( (tirage >= 94 && tirage < 98) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
     new_direction_relative = 3;
   }
   //sinon on recule
@@ -516,6 +516,14 @@ struct Coordonnees* init_struct_coord()
   return position;
 }
 
+void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1)
+{
+  *direction = dir_relative_to_absolue(laby , *direction , ia_dir_relative(laby , ia1->y , ia1->x , *direction) );
+  laby = deplace_ia(laby,w,h,ia1->y,ia1->x, *direction );
+  ia1->x = next_col(ia1->x, *direction);
+  ia1->y = next_line(ia1->y, *direction);
+  freq = remplir_mat_frequence(freq,ia1->y,ia1->x);
+}
 /* fun demande_direction_relative
  * arg laby
  * arg joueur
