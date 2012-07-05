@@ -48,14 +48,24 @@ int main()
   laby = joueur_insertion(laby, w, h, joueur);
 
   //autres déplacements
+  
+  int direction_joueur = 0;
+  
   compteur_deplacement = -1;
   while(compteur_deplacement<10000) {
+   
+    show_laby(laby,w,h);
+    direction_joueur = demande_direction_relative(laby,joueur);
+    deplace_joueur(laby, w, h, joueur, direction_joueur);
+    show_laby(laby,w,h);
+
+    usleep(50000);
     ia1_play(laby,freq,w,h,direction,ia1);
     show_laby(laby,w,h);
     compteur_deplacement++;
-    show_freq(freq, w, h, compteur_deplacement);
+    //show_freq(freq, w, h, compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
-    usleep(20000);
+    usleep(50000);
   }
   show_freq(freq , w , h , compteur_deplacement);
   return 0;

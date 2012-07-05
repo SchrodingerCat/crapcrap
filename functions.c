@@ -270,7 +270,13 @@ int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction)
 
 /* fun est_case_vide
  * arg laby
+ *
  * arg dir
+ * 0 : haut
+ * 1 : droite
+ * 2 : bas
+ * 3 : gauche
+ *
  * arg old_y
  * arg old_x
  * renvoit 
@@ -528,11 +534,81 @@ void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordo
  * arg laby
  * arg joueur
  * renvoit la direction relative du joueur
- *
+ */
 int demande_direction_relative(int** laby, struct Coordonnees* joueur)
 {
-  int deplacement possible = 0;
-
+  int deplacement_possible = 0;
+  char touche_joueur = '\n';
+  while(!(deplacement_possible==1)) {
+    touche_joueur = getchar();
+    if(touche_joueur == 'z' && est_case_vide(laby, 0, joueur->y, joueur->x)) {
+      deplacement_possible = 1;
+    }
+    else if(touche_joueur == 's' && est_case_vide(laby, 2, joueur->y, joueur->x)) {
+      deplacement_possible = 1;
+    }
+    else if(touche_joueur == 'q' && est_case_vide(laby, 3, joueur->y, joueur->x)) {
+      deplacement_possible = 1;
+    }
+    else if(touche_joueur == 'd' && est_case_vide(laby, 1, joueur->y, joueur->x)) {
+      deplacement_possible = 1;
+    }
+  }
+  if (touche_joueur == 'z') {
+    return 0;
+  }
+  else if(touche_joueur == 'q') {
+    return 3;
+  }
+  else if(touche_joueur == 's') {
+    return 2;
+  }
+  else if(touche_joueur == 'd') {
+    return 1;
+  }
+  else {
+    return 42;
+  }
 }
-*/
+
+/* fun deplace_joueur : 
+ * arg laby : le labyrinthe
+ * arg w : largeur
+ * arg h : hauteur 
+ * arg joueur : coordonée actuelle du joueur
+ * arg direction : direction où il faut déplacer le joueur, en notation absolue telle que : 
+ * 0 : haut   
+ * 1 : droite 
+ * 2 : bas    
+ * 3 : gauche 
+ */
+int** deplace_joueur(int** laby, int w, int h, struct Coordonnees* joueur, int direction)
+{
+  laby[joueur->y][joueur->x] = 0;
+  if(direction == 0) {
+    //nord
+    laby[joueur->y - 1][joueur->x] = 3;
+    joueur->y = joueur->y - 1;
+  }
+  else if(direction == 1) {
+    //est
+    laby[joueur->y][joueur->x + 1] = 3;
+    joueur->x = joueur->x + 1;
+  }
+  else if(direction == 2) {
+    //sud
+    laby[joueur->y + 1][joueur->x] = 3;
+    joueur->y = joueur->y + 1;
+  }
+  else if(direction == 3) {
+    //ouest
+    laby[joueur->y][joueur->x - 1] = 3;
+    joueur->x = joueur->x - 1;
+  }
+  else{
+    printf("Mauvaise direction\n"); 
+  }
+  return laby;
+}
+
 

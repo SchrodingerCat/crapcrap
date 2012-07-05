@@ -27,3 +27,7 @@ int** trace_obstacles(int** laby, int w, int h);
 int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur);
 struct Coordonnees* init_struct_coord();
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1);
+int demande_direction_relative(int** laby, struct Coordonnees* joueur);
+int** deplace_joueur(int** laby, int w, int h, struct Coordonnees* joueur, int direction);
+
+
