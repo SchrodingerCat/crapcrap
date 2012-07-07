@@ -11,7 +11,7 @@ int** init_mat(int w, int h)
   int i;
   int** laby;
   laby = malloc(sizeof(int) * w);
-  for(i=0;i<h;i++) {
+  for(i=0;i<w;i++) {
     laby[i] = malloc(sizeof(int) * h);
   }
   return laby;
@@ -510,8 +510,7 @@ int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
   return laby;
 }
 
-/* fun initialiser_coordonnees
- * arg point : structure contenant des coordonnées
+/* fun init_struct_coord
  */
 struct Coordonnees* init_struct_coord()
 {
@@ -521,6 +520,15 @@ struct Coordonnees* init_struct_coord()
   position->y = 0;
   return position;
 }
+
+/* fun init_struct_datas_ddr
+ *
+struct Datas_ddr* init_struct_datas_ddr()
+{
+  struct Datas_ddr* data1 = NULL;
+  data1 = malloc(sizeof()
+
+}*/
 
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1)
 {

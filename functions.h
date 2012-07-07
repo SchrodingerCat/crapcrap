@@ -5,6 +5,13 @@ struct Coordonnees
   int y;
 };
 
+struct Datas_ddr
+{
+  int** laby;
+  int y_joueur;
+  int x_joueur;
+};
+
 int** init_mat(int w, int h);
 int** init_mur(int** laby, int w, int h);
 int** init_bord(int** laby, int w, int h);
@@ -29,5 +36,3 @@ struct Coordonnees* init_struct_coord();
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1);
 int demande_direction_relative(int** laby, struct Coordonnees* joueur);
 int** deplace_joueur(int** laby, int w, int h, struct Coordonnees* joueur, int direction);
-
-
