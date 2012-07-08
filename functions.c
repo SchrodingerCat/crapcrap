@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <pthread.h>
 #include "couleurs.h"
 #include "functions.h"
 
@@ -522,13 +523,17 @@ struct Coordonnees* init_struct_coord()
 }
 
 /* fun init_struct_datas_ddr
- *
-struct Datas_ddr* init_struct_datas_ddr()
+ */
+struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position)
 {
   struct Datas_ddr* data1 = NULL;
-  data1 = malloc(sizeof()
-
-}*/
+  data1 = malloc((sizeof(int**)*1) + (sizeof(int)*3));
+  data1->laby1 = laby;
+  data1->y_joueur = position->y;
+  data1->x_joueur = position->x;
+  data1->direction = ia_cherche_deplacement(laby,position->y,position->x);
+  return data1;
+}
 
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1)
 {
@@ -539,43 +544,45 @@ void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordo
   freq = remplir_mat_frequence(freq,ia1->y,ia1->x);
 }
 /* fun demande_direction_relative
- * arg laby
- * arg joueur
+ * arg data
+ * contient : struct Datas_ddr
  * renvoit la direction relative du joueur
  */
-int demande_direction_relative(int** laby, struct Coordonnees* joueur)
+void* demande_direction_relative(void* data)
 {
-  int deplacement_possible = 0;
-  char touche_joueur = '\n';
-  while(!(deplacement_possible==1)) {
-    touche_joueur = getchar();
-    if(touche_joueur == 'z' && est_case_vide(laby, 0, joueur->y, joueur->x)) {
-      deplacement_possible = 1;
+  //decast:
+  struct Datas_ddr* data1 = (struct Datas_ddr*) data;
+  //boucle
+  while(1) {
+    int deplacement_possible = 0;
+    char touche_joueur = '\n';
+    while(!(deplacement_possible==1)) {
+      touche_joueur = getchar();
+      if(touche_joueur == 'z' && est_case_vide(data1->laby1, 0, data1->y_joueur -1, data1->x_joueur)) {
+        deplacement_possible = 1;
+      }
+      else if(touche_joueur == 's' && est_case_vide(data1->laby1, 2, data1->y_joueur +1, data1->x_joueur)) {
+        deplacement_possible = 1;
+      }
+      else if(touche_joueur == 'q' && est_case_vide(data1->laby1, 3, data1->y_joueur, data1->x_joueur -1)) {
+        deplacement_possible = 1;
+      }
+      else if(touche_joueur == 'd' && est_case_vide(data1->laby1, 1, data1->y_joueur, data1->x_joueur +1)) {
+        deplacement_possible = 1;
+      }
     }
-    else if(touche_joueur == 's' && est_case_vide(laby, 2, joueur->y, joueur->x)) {
-      deplacement_possible = 1;
+    if (touche_joueur == 'z') {
+      data1->direction = 0;
     }
-    else if(touche_joueur == 'q' && est_case_vide(laby, 3, joueur->y, joueur->x)) {
-      deplacement_possible = 1;
+    else if(touche_joueur == 'q') {
+      data1->direction = 3;
     }
-    else if(touche_joueur == 'd' && est_case_vide(laby, 1, joueur->y, joueur->x)) {
-      deplacement_possible = 1;
+    else if(touche_joueur == 's') {
+      data1->direction = 2;
     }
-  }
-  if (touche_joueur == 'z') {
-    return 0;
-  }
-  else if(touche_joueur == 'q') {
-    return 3;
-  }
-  else if(touche_joueur == 's') {
-    return 2;
-  }
-  else if(touche_joueur == 'd') {
-    return 1;
-  }
-  else {
-    return 42;
+    else if(touche_joueur == 'd') {
+      data1->direction = 1;
+    }
   }
 }
 
@@ -590,28 +597,31 @@ int demande_direction_relative(int** laby, struct Coordonnees* joueur)
  * 2 : bas    
  * 3 : gauche 
  */
-int** deplace_joueur(int** laby, int w, int h, struct Coordonnees* joueur, int direction)
+int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int direction)
 {
-  laby[joueur->y][joueur->x] = 0;
-  if(direction == 0) {
+  if( direction == 0 && (est_case_vide(laby, direction, datas1->y_joueur -1, datas1->x_joueur)) ) {
     //nord
-    laby[joueur->y - 1][joueur->x] = 3;
-    joueur->y = joueur->y - 1;
+    laby[datas1->y_joueur][datas1->x_joueur] = 0;
+    laby[datas1->y_joueur - 1][datas1->x_joueur] = 3;
+    datas1->y_joueur = datas1->y_joueur - 1;
   }
-  else if(direction == 1) {
+  else if(direction == 1 && (est_case_vide(laby, direction, datas1->y_joueur, datas1->x_joueur +1)) ) {
     //est
-    laby[joueur->y][joueur->x + 1] = 3;
-    joueur->x = joueur->x + 1;
+    laby[datas1->y_joueur][datas1->x_joueur] = 0;
+    laby[datas1->y_joueur][datas1->x_joueur + 1] = 3;
+    datas1->x_joueur = datas1->x_joueur + 1;
   }
-  else if(direction == 2) {
+  else if(direction == 2 && (est_case_vide(laby, direction, datas1->y_joueur +1, datas1->x_joueur)) ) {
     //sud
-    laby[joueur->y + 1][joueur->x] = 3;
-    joueur->y = joueur->y + 1;
+    laby[datas1->y_joueur][datas1->x_joueur] = 0;
+    laby[datas1->y_joueur + 1][datas1->x_joueur] = 3;
+    datas1->y_joueur = datas1->y_joueur + 1;
   }
-  else if(direction == 3) {
+  else if(direction == 3 && (est_case_vide(laby, direction, datas1->y_joueur, datas1->x_joueur -1)) ) {
     //ouest
-    laby[joueur->y][joueur->x - 1] = 3;
-    joueur->x = joueur->x - 1;
+    laby[datas1->y_joueur][datas1->x_joueur] = 0;
+    laby[datas1->y_joueur][datas1->x_joueur - 1] = 3;
+    datas1->x_joueur = datas1->x_joueur - 1;
   }
   else{
     printf("Mauvaise direction\n"); 

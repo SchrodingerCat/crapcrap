@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "couleurs.h"
 #include "functions.h"
 
@@ -19,6 +20,7 @@ int main()
   struct Coordonnees* ia1;
   struct Coordonnees* joueur; 
   struct Coordonnees* ia1_old;
+  struct Datas_ddr* datas1;
 
   ia1_old = init_struct_coord();
   ia1 = init_struct_coord();
@@ -47,26 +49,35 @@ int main()
   //insert le joueur
   laby = joueur_insertion(laby, w, h, joueur);
 
-  //autres déplacements
-  
-  int direction_joueur = 0;
-  
+  //autres déplacements 
+  //int direction_joueur = 0;
   compteur_deplacement = -1;
+  // on déclare le thread
+  pthread_t thread1;
+  // on fabrique la structure pour le passage dans le thread
+  datas1 = init_struct_datas_ddr(laby,joueur);
+  // on lance le thread
+  pthread_create(&thread1, NULL, demande_direction_relative, datas1);
+  
   while(compteur_deplacement<10000) {
    
-    show_laby(laby,w,h);
-    direction_joueur = demande_direction_relative(laby,joueur);
-    deplace_joueur(laby, w, h, joueur, direction_joueur);
-    show_laby(laby,w,h);
+    //show_laby(laby,w,h);
+    //direction_joueur = demande_direction_relative(laby,joueur);
 
-    usleep(50000);
+    // si le déplacement a changé alors:
+    deplace_joueur(laby, w, h, datas1, datas1->direction);
+    //show_laby(laby,w,h);
+
+    //usleep(1000000);
     ia1_play(laby,freq,w,h,direction,ia1);
     show_laby(laby,w,h);
     compteur_deplacement++;
     //show_freq(freq, w, h, compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
-    usleep(50000);
+    usleep(1000000);
   }
+  // on termine le thread
+  int pthread_cancel(pthread_t thread1);
   show_freq(freq , w , h , compteur_deplacement);
   return 0;
 }

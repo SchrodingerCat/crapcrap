@@ -7,9 +7,10 @@ struct Coordonnees
 
 struct Datas_ddr
 {
-  int** laby;
+  int** laby1;
   int y_joueur;
   int x_joueur;
+  int direction;
 };
 
 int** init_mat(int w, int h);
@@ -33,6 +34,7 @@ int** remplir_mat_frequence(int** freq, int pos_y, int pos_x);
 int** trace_obstacles(int** laby, int w, int h); 
 int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur);
 struct Coordonnees* init_struct_coord();
+struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position);
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1);
-int demande_direction_relative(int** laby, struct Coordonnees* joueur);
-int** deplace_joueur(int** laby, int w, int h, struct Coordonnees* joueur, int direction);
+void* demande_direction_relative(void*);
+int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int direction);
