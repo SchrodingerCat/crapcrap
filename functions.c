@@ -1,3 +1,14 @@
+/**
+* \file functions.c
+* \brief Programme contenant les fonctions du cracrap
+* \author Raphael.C
+* \version 0.0.0.0.9
+* \date 12 juillet 2012
+*
+* Programme de crapcraping.
+*
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -5,7 +16,18 @@
 #include "couleurs.h"
 #include "functions.h"
 
-/* fun init_mat
+/**
+ * \fn int** init_mat(int w, int h)  
+ * \brief Fonction d'allocation en mémoire d'une matrice bidimentionnelle
+ * \param w taille en largeur de la matrice
+ * \param h taille en hauteur de la matrice
+ * \return l'adresse de la matrice
+ */
+/**
+ * \fn
+ * \brief
+ * \param
+ * \return
  */
 int** init_mat(int w, int h) 
 {
@@ -18,9 +40,13 @@ int** init_mat(int w, int h)
   return laby;
 }
 
-/* fun init_mur
- * arg w : largeur
- * arg h : hauteur
+/**
+ * \fn int** init_mur(int** laby, int w, int h) 
+ * \brief Fonction de création de murs dans toute la matrice
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \return l'adresse du labyrinthe avec des murs
  */
 int** init_mur(int** laby, int w, int h) 
 {
@@ -33,9 +59,13 @@ int** init_mur(int** laby, int w, int h)
   return laby;
 }
 
-/* fun init_bord
- * arg w : largeur
- * arg h : hauteur
+/**
+ * \fn int** init_bord(int** laby, int w, int h)
+ * \brief Fonction de création de bords délimitant le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \return l'adresse du labyrinthe avec des bords
  */
 int** init_bord(int** laby, int w, int h)
 {
@@ -50,7 +80,14 @@ int** init_bord(int** laby, int w, int h)
   return laby;
 }
 
-/* fun show_laby
+/** 
+ * \fn void show_laby(int** laby, int w, int h)
+ * \brief Fonction d'affichage du labyrinthe 
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \return rien
+ * rappel du contenu possible du labyrinthe:
  * 0 : vide
  * 1 : mur
  * 2 : bord
@@ -68,18 +105,18 @@ void show_laby(int** laby, int w, int h)
       }
       else if(laby[i][j]==1) {
         couleur("47");
-        printf(" ");
+        printf("M");
       }
       else if(laby[i][j]==2) {
         couleur("47");
-        printf(" ");
+        printf("B");
       }
       else if(laby[i][j]==3) {
-        //couleur("32;40");
-        printf("J");
+        couleur("42");
+        printf(" ");
       }
       else if(laby[i][j]==4) {
-        couleur("45");
+        couleur("41");
         printf("i");
       }
       couleur("0");
@@ -88,8 +125,14 @@ void show_laby(int** laby, int w, int h)
   }
 }
 
-/* fun show_freq
- * affiche les frequences d'appartition de l'ia par case
+/**
+ * \fn void show_freq(int** freq, int w, int h, int total_deplacement)
+ * \brief Fonction d'affichage des frequences d'apparition de l'ia par case
+ * \param freq adresse de la matrice des frequences
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \param total_deplacement c'est le nombre de déplacement déjà effectué par l'ia
+ * \return rien
  */
 void show_freq(int** freq, int w, int h, int total_deplacement)
 {
@@ -132,8 +175,13 @@ void show_freq(int** freq, int w, int h, int total_deplacement)
   }
 }
 
-/* fun next_col
-*/ 
+/**
+ * \fn int next_col(int pos_x, int dir)
+ * \brief Fonction qui détermine un numéro de colonne à partir d'un numéro de colonne et d'un direction
+ * \param pos_x ancien numéro de colonne
+ * \param dir direction
+ * \return nouveau numéro de colonne
+ */
 int next_col(int pos_x, int dir)
 {
   if((dir==0) || (dir==2)) {
@@ -146,8 +194,14 @@ int next_col(int pos_x, int dir)
     return pos_x+1;
   }
 }
-/* fun next_line
-*/ 
+
+/**
+ * \fn int next_line(int pos_y, int dir)
+ * \brief Fonction qui détermine un numéro de ligne à partir d'un numéro de ligne et d'un direction
+ * \param pos_y ancien numéro de ligne
+ * \param dir direction
+ * \return nouveau numéro de ligne
+ */
 int next_line(int pos_y, int dir)
 {
   if((dir==3) || (dir==1)) {
@@ -161,12 +215,13 @@ int next_line(int pos_y, int dir)
   }
 }
 
-
-/* fun cherche_mur : recherche un mur
- * arg w : largeur
- * arg h : hauteur
- * si (x,y) est un mur alors 
- * retourne c = (100*x) + y
+/**
+ * \fn int cherche_mur(int** laby, int w, int h)
+ * \brief Fonction de recherche d'une position dans le labyrinthe correspondant a un mur
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \return une position dans le labyrinthe sous la forme { (100*x) + y }
  */
 int cherche_mur(int** laby, int w, int h)
 {
@@ -181,32 +236,39 @@ int cherche_mur(int** laby, int w, int h)
       is_a_mur = 1;
     }
     limite = limite +1;
-    //printf("%d\n", limite);
   }
-  //if(limite>=10000000) {
-  //  return 0;
-  //}
   return ((100*coord_x) + coord_y);
 }
 
-/* fun insere_joueur : insere le joueur dans le laby
- * arg laby : le laby
- * arg w
- * arg h 
- * pos_x : position joueur en x
- * pos_y : position joueur en y
+/**
+ * \fn int** insere_joueur(int** laby, int w, int h, int pos_y, int pos_x)
+ * \brief Fonction qui insère un joueur dans le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe 
+ * \param pos_y position en y
+ * \param pos_x position en x
+ * \return adresse du labyrinthe avec le joueur 
  */
 int** insere_joueur(int** laby, int w, int h, int pos_y, int pos_x)
 {
-  laby[pos_y][pos_x] = 3;
+  if(pos_x<=w && pos_y<=h) {
+    laby[pos_y][pos_x] = 3;
+  }
+  else {
+    printf("ERREUR:impossible d'inserer le joueur en dehors du labyrinthe\n");
+    return laby;
+  }
   return laby;
 }
 
-/* fun cherche_vide : cherche une case vide
- * arg laby :
- * arg w : largeur
- * arg h : hauteur
- * renvoit une coordonée sous la forme (100*x) +y
+/**
+ * \fn int cherche_vide(int** laby, int w, int h)
+ * \brief Fonction de recherche d'une case vide
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe 
+ * \return une position dans le labyrinthe sous la forme { (100*x) + y }
  */
 int cherche_vide(int** laby, int w, int h)
 {
@@ -223,12 +285,15 @@ int cherche_vide(int** laby, int w, int h)
   return c;
 }
 
-/* fun insere_ia : insere une ia dans le laby
- * arg laby : le laby
- * arg w
- * arg h 
- * pos_x : position joueur en x
- * pos_y : position joueur en y
+/**
+ * \fn  int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x)
+ * \brief Fonction qui insère une ia dans le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur de la matrice
+ * \param h taille en hauteur de la matrice
+ * \param pos_y ancien numéro de ligne
+ * \param pos_x ancien numéro de colonne
+ * \return l'adresse du labyrinthe contenant l'ia
  */
 int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x)
 {
@@ -236,13 +301,22 @@ int** insere_ia(int** laby, int w, int h, int pos_y, int pos_x)
   return laby;
 }
 
-/* fun deplace_ia : 
- * arg laby
- * arg w
- * arg h
- * arg old_y
- * arg old_x
- * arg direction
+/**
+ * \fn int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction)
+ * \brief Fonction qui déplace une fois une ia dans le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur de la matrice
+ * \param h taille en hauteur de la matrice
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \param direction direction que doit prendre l'ia 
+ * \return l'adresse du labyrinthe une fois l'ia déplacée une fois
+ *
+ * La direction est notée telle que:
+ * 0 : haut
+ * 1 : droite
+ * 2 : bas
+ * 3 : gauche
  */
 int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction)
 {
@@ -269,22 +343,22 @@ int** deplace_ia(int** laby, int w, int h, int old_y, int old_x, int direction)
   return laby;
 }
 
-/* fun est_case_vide
- * arg laby
+/**
+ * \fn int est_case_vide_avec_direction(int** laby, int direction, int old_y, int old_x)
+ * \brief Fonction qui teste si une coordonnée indiqué par une position (x,y) ainsi que une direction, est vide
+ * \param laby adresse du labyrinthe
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \param direction direction 
+ * \return 1 si vrai, 0 sinon
  *
- * arg dir
+ * La direction est notée telle que:
  * 0 : haut
  * 1 : droite
  * 2 : bas
  * 3 : gauche
- *
- * arg old_y
- * arg old_x
- * renvoit 
- * 1 si vide
- * 0 si non-vide
  */
-int est_case_vide(int** laby, int direction, int old_y, int old_x)
+int est_case_vide_avec_direction(int** laby, int direction, int old_y, int old_x)
 {
   int colonne = next_col(old_x, direction);
   int ligne = next_line(old_y, direction);
@@ -296,12 +370,38 @@ int est_case_vide(int** laby, int direction, int old_y, int old_x)
   }
 }
 
-/* ia_cherche_deplacement
- * arg laby
- * arg w : largeur
- * arg h : hauteur
- * arg old_x
- * arg old_y
+/**
+ * \fn int est_case_vide(int** laby, struct Coordonnees* position)
+ * \brief Fonction qui teste si une coordonnée indiquée, est vide
+ * \param laby adresse du labyrinthe
+ * \param position adresse de la structure des coordonnées
+ * \return 1 si vrai, 0 sinon
+ */
+int est_case_vide(int** laby, struct Coordonnees* position)
+{
+  if(laby[position->y][position->x] == 0) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ * \fn int ia_cherche_deplacement(int** laby, int old_y, int old_x) 
+ * \brief Fonction qui recherche une direction indiquant une case vide
+ * \param laby adresse du labyrinthe
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \return Direction menant à une case vide
+ *
+ * L'ordre de test des directions est aléatoire.
+ *
+ * La direction est notée telle que:
+ * 0 : haut
+ * 1 : droite
+ * 2 : bas
+ * 3 : gauche
  */
 int ia_cherche_deplacement(int** laby, int old_y, int old_x)
 {
@@ -312,25 +412,21 @@ int ia_cherche_deplacement(int** laby, int old_y, int old_x)
   while( !(deplacement_possible == 1 || count >25) ) {
     test_direction = rand()%4;
     if(test_direction == 0) {
-      //nord
       if(laby[old_y-1][old_x]==0){
         deplacement_possible = 1;
       }
     }
     else if(test_direction == 1) {
-      //est
       if(laby[old_y][old_x+1]==0){
         deplacement_possible = 1;
       }
     }
     else if(test_direction == 2) {
-      //sud
       if(laby[old_y+1][old_x]==0){
         deplacement_possible = 1;
       }
     }
     else if(test_direction == 3) {
-      //ouest
       if(laby[old_y][old_x-1]==0){
         deplacement_possible = 1;
       }
@@ -340,13 +436,16 @@ int ia_cherche_deplacement(int** laby, int old_y, int old_x)
   return test_direction;
 }
 
-
-/** fun ia_dir_relative
- * arg laby : le labyrinthe
- * arg old_y : position sur y
- * arg old_x : position sur x
- * arg old_dir : ancienne direction
- ** renvoit une nouvelle direction possible, avec une notation relative telle que :
+/**
+ * \fn int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
+ * \brief Fonction qui recherche une direction relative pour l'ia1 en fonction de son précédent déplacement
+ * \param laby adresse du labyrinthe
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \param old_dir précédente direction 
+ * \return Direction du prochain déplacement
+ *
+ * La nouvelle direction possible, avec une notation relative telle que :
  * 3 : tourne a gauche 3 fois (270°)
  * 2 : tourne a gauche 2 fois (180°)
  * 1 : tourne a gauche 1 fois ( 90°)
@@ -356,29 +455,40 @@ int ia_dir_relative(int** laby , int old_y , int old_x , int old_dir)
 {
   int tirage = rand()%100;
   int new_direction_relative;
-  if ( tirage < 90 && est_case_vide(laby,old_dir,old_y,old_x) ) {
+  // tout droit
+  if ( tirage < 90 && est_case_vide_avec_direction(laby,old_dir,old_y,old_x) ) {
     new_direction_relative = 0;
   }
-  //gauche
-  else if ( (tirage >= 90 && tirage < 94) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
+  // tourner à gauche
+  else if ( (tirage >= 90 && tirage < 94) && est_case_vide_avec_direction(laby, dir_relative_to_absolue(laby,old_dir,1) ,old_y,old_x) ) {
     new_direction_relative = 1;
   }
-  //droite
-  else if ( (tirage >= 94 && tirage < 98) && est_case_vide(laby, dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
+  // tourner à droite
+  else if ( (tirage >= 94 && tirage < 98) && est_case_vide_avec_direction(laby, dir_relative_to_absolue(laby,old_dir,3) ,old_y,old_x) ) {
     new_direction_relative = 3;
   }
-  //sinon on recule
+  // reculer
   else {
     new_direction_relative = 2;
   }
   return new_direction_relative;
 }
 
-/** fun dir_relative_to_absolue
- * arg laby : le labyrinthe
- * arg old_dir : ancienne direction
- * arg dir_relative : direction relative ( (0;1;2;3) où le chiffre est le nombre de rotation de 90° dans le sens anti-horaire
- ** renvoit la direction avec la notation absolue telle que :
+/**
+ * \fn int dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
+ * \brief Fonction qui determine une direction absolue en fonction d'une ancienne direction et d'une direction relative
+ * \param laby adresse du labyrinthe
+ * \param old_dir ancienne direction
+ * \param dir_relative direction relative
+ * \return Direction absolue
+ *
+ * La direction relative telle que :
+ * 3 : tourne a gauche 3 fois (270°)
+ * 2 : tourne a gauche 2 fois (180°)
+ * 1 : tourne a gauche 1 fois ( 90°)
+ * 0 : garde la précédente direction
+ *
+ * La direction absolue telle que:
  * 0 : haut
  * 1 : droite
  * 2 : bas
@@ -423,23 +533,29 @@ int dir_relative_to_absolue (int** laby , int old_dir , int dir_relative)
   }
 }
 
-/* fun fabrique_mat_frequence : renvoit une matrice contenant
- * -1 : mur
- * -2 : bords 
- * 0  : cases vides  
- * arg laby : la matrice du jeu
- */
+/**
+ * \fn int** fabrique_mat_frequence(int** laby, int** freq, int w, int h)
+ * \brief Fonction qui construit une proto-matrice de frequence, en fonction de la matrice du jeu
+ * \param laby adresse du labyrinthe
+ * \param freq adresse de la matrice des frequences
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \return adresse de la matrice de frequence
+ * 
+ * la matrice des frequences contenant:
+ * -1 si le labyrinthe contient un mur
+ * -2 si le labyrinthe contient un bord
+ * 0 si le labyrinthe contient une case vide
+*/
 int** fabrique_mat_frequence(int** laby, int** freq, int w, int h)
 {
   int i,j;
 
   for(i=0;i<h;i++) {
     for(j=0;j<w;j++) {
-      //si c'est un mur
       if(laby[i][j] == 1) {
         freq[i][j] = -1;
       }
-      //si c'est un bord
       else if(laby[i][j] == 2) {
         freq[i][j] = -2;
       }
@@ -451,9 +567,13 @@ int** fabrique_mat_frequence(int** laby, int** freq, int w, int h)
   return freq;
 }
 
-/* fun remplir_mat_frequence : ajoute 1 a une position indiquée
- * arg pos_y :
- * arg pos_x :  
+/**
+ * \fn int** remplir_mat_frequence(int** freq, int pos_y, int pos_x)
+ * \brief
+ * \param freq adresse de la matrice des frequences
+ * \param pos_y position en y où il faut incrémenter la matrice des fréquences
+ * \param pos_x position en x où il faut incrémenter la matrice des fréquences
+ * \return l'adresse de la matrice des frequences incrémentée
  */
 int** remplir_mat_frequence(int** freq, int pos_y, int pos_x)
 {
@@ -461,10 +581,13 @@ int** remplir_mat_frequence(int** freq, int pos_y, int pos_x)
   return freq;
 }
 
-/* fun trace_obstacles
- *
- * w : largeur
- * h : hauteur
+/**
+ * \fn int** trace_obstacles(int** laby, int w, int h)
+ * \brief Fonction qui trace des murs dans le labyrinthe selon un modèle
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe  
+ * \return l'adresse du labyrinthe avec les murs
  */
 int** trace_obstacles(int** laby, int w, int h)
 {
@@ -475,7 +598,7 @@ int** trace_obstacles(int** laby, int w, int h)
     test_colonne = 1;
     if(test_ligne == 0 || test_ligne == 1) {
       for(j=1 ; j<(w-1) ; j++) {
-        if(test_colonne==0 || test_colonne==1) {
+       if(test_colonne==0 || test_colonne==1) {
           laby[i][j] = 1;
           test_colonne++;
         }  
@@ -495,10 +618,15 @@ int** trace_obstacles(int** laby, int w, int h)
   }
   return laby;
 }
-/* fun joueur_insertion : insert un joueur dans une case vide aléatoire
- * arg laby : laby
- * arg w: largeur du labyrinthe
- * arg h: hauteur du labyrinthe
+
+/**
+ * \fn int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
+ * \brief Fonction qui insère un joueur dans le labyrinthe à une position en argument
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe  
+ * \param joueur coordonnées du joueur
+ * \return l'adresse du labyrinthe une fois le joueur inséré
  */
 int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
 {
@@ -511,7 +639,10 @@ int** joueur_insertion(int** laby, int w, int h, struct Coordonnees* joueur)
   return laby;
 }
 
-/* fun init_struct_coord
+/**
+ * \fnstruct Coordonnees* init_struct_coord()
+ * \brief Fonction d'allocation en mémoire d'une structure contenant un couple de coordonnées (x,y) 
+ * \return l'adresse de la structure des coordonnées (x,y)
  */
 struct Coordonnees* init_struct_coord()
 {
@@ -522,7 +653,12 @@ struct Coordonnees* init_struct_coord()
   return position;
 }
 
-/* fun init_struct_datas_ddr
+/**
+ * \fn struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position)
+ * \brief Fonction d'allocation en mémoire d'une structure contenant l'adresse de la structure de la position du joueur, un déplacement possible, et l'adresse du labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param joueur coordonnées du joueur
+ * \return l'adresse de la structure des données destinées a la fonction "demande_direction_relative(void* data)" qui sera lancée dans un thread 
  */
 struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position)
 {
@@ -535,6 +671,16 @@ struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position
   return data1;
 }
 
+/**
+ * \fn void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1)
+ * \brief Fonction qui permet à l'ia de proceder à un déplacement 
+ * \param laby adresse du labyrinthe
+ * \param freq adresse de la matrice des frequences
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \param direction adresse de la direction de l'ia
+ * \param ia1 adresse de la position de l'ia1
+ */
 void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia1)
 {
   *direction = dir_relative_to_absolue(laby , *direction , ia_dir_relative(laby , ia1->y , ia1->x , *direction) );
@@ -543,10 +689,11 @@ void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordo
   ia1->y = next_line(ia1->y, *direction);
   freq = remplir_mat_frequence(freq,ia1->y,ia1->x);
 }
-/* fun demande_direction_relative
- * arg data
- * contient : struct Datas_ddr
- * renvoit la direction relative du joueur
+
+/**
+ * \fn void* demande_direction_relative(void* data)
+ * \brief Fonction servant à capturer le déplacements que souhaite le joueur, en capturant les touches du clavier, cette fonction sera placée dans un thread
+ * \param data données brutes qui contiennent une "struct Datas_ddr*"
  */
 void* demande_direction_relative(void* data)
 {
@@ -558,16 +705,16 @@ void* demande_direction_relative(void* data)
     char touche_joueur = '\n';
     while(!(deplacement_possible==1)) {
       touche_joueur = getchar();
-      if(touche_joueur == 'z' && est_case_vide(data1->laby1, 0, data1->y_joueur -1, data1->x_joueur)) {
+      if(touche_joueur == 'z' && est_case_vide_avec_direction(data1->laby1, 0, data1->y_joueur -1, data1->x_joueur)) {
         deplacement_possible = 1;
       }
-      else if(touche_joueur == 's' && est_case_vide(data1->laby1, 2, data1->y_joueur +1, data1->x_joueur)) {
+      else if(touche_joueur == 's' && est_case_vide_avec_direction(data1->laby1, 2, data1->y_joueur +1, data1->x_joueur)) {
         deplacement_possible = 1;
       }
-      else if(touche_joueur == 'q' && est_case_vide(data1->laby1, 3, data1->y_joueur, data1->x_joueur -1)) {
+      else if(touche_joueur == 'q' && est_case_vide_avec_direction(data1->laby1, 3, data1->y_joueur, data1->x_joueur -1)) {
         deplacement_possible = 1;
       }
-      else if(touche_joueur == 'd' && est_case_vide(data1->laby1, 1, data1->y_joueur, data1->x_joueur +1)) {
+      else if(touche_joueur == 'd' && est_case_vide_avec_direction(data1->laby1, 1, data1->y_joueur, data1->x_joueur +1)) {
         deplacement_possible = 1;
       }
     }
@@ -586,38 +733,40 @@ void* demande_direction_relative(void* data)
   }
 }
 
-/* fun deplace_joueur : 
- * arg laby : le labyrinthe
- * arg w : largeur
- * arg h : hauteur 
- * arg joueur : coordonée actuelle du joueur
- * arg direction : direction où il faut déplacer le joueur, en notation absolue telle que : 
- * 0 : haut   
- * 1 : droite 
- * 2 : bas    
- * 3 : gauche 
+/**
+ * \fn int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int direction)
+ * \brief Fonction permettant un déplacement du joueur dans le labyrinthe en fonction des informations obtenues par la fonction "void* demande_direction_relative(void* data)"
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \param datas1 adresse de la structure de données contenant la position du joueur, et la direction que souhaite l'humain qui dirige le joueur 
+ * \param direction adresse de la direction de l'ia
+ * \return l'adresse du labyrinthe une fois le joueur déplacé
+ *
+ * REMARQUE: l'argument direction est inutile car la direction est dans datas1 --> [à MODIFIER]
+ *
  */
 int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int direction)
 {
-  if( direction == 0 && (est_case_vide(laby, direction, datas1->y_joueur -1, datas1->x_joueur)) ) {
+  if( direction == 0 && (est_case_vide_avec_direction(laby, direction, datas1->y_joueur -1, datas1->x_joueur)) ) {
     //nord
     laby[datas1->y_joueur][datas1->x_joueur] = 0;
     laby[datas1->y_joueur - 1][datas1->x_joueur] = 3;
     datas1->y_joueur = datas1->y_joueur - 1;
   }
-  else if(direction == 1 && (est_case_vide(laby, direction, datas1->y_joueur, datas1->x_joueur +1)) ) {
+  else if(direction == 1 && (est_case_vide_avec_direction(laby, direction, datas1->y_joueur, datas1->x_joueur +1)) ) {
     //est
     laby[datas1->y_joueur][datas1->x_joueur] = 0;
     laby[datas1->y_joueur][datas1->x_joueur + 1] = 3;
     datas1->x_joueur = datas1->x_joueur + 1;
   }
-  else if(direction == 2 && (est_case_vide(laby, direction, datas1->y_joueur +1, datas1->x_joueur)) ) {
+  else if(direction == 2 && (est_case_vide_avec_direction(laby, direction, datas1->y_joueur +1, datas1->x_joueur)) ) {
     //sud
     laby[datas1->y_joueur][datas1->x_joueur] = 0;
     laby[datas1->y_joueur + 1][datas1->x_joueur] = 3;
     datas1->y_joueur = datas1->y_joueur + 1;
   }
-  else if(direction == 3 && (est_case_vide(laby, direction, datas1->y_joueur, datas1->x_joueur -1)) ) {
+  else if(direction == 3 && (est_case_vide_avec_direction(laby, direction, datas1->y_joueur, datas1->x_joueur -1)) ) {
     //ouest
     laby[datas1->y_joueur][datas1->x_joueur] = 0;
     laby[datas1->y_joueur][datas1->x_joueur - 1] = 3;
@@ -628,5 +777,4 @@ int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int dir
   }
   return laby;
 }
-
 

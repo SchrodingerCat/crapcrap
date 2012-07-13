@@ -1,3 +1,14 @@
+/**
+* \file laby.c
+* \brief Programme contenant les fonctions du cracrap
+* \author Raphael.C
+* \version 0.0.0.0.9
+* \date 12 juillet 2012
+*
+* Programme de crapcraping.
+*
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -70,11 +81,16 @@ int main()
 
     //usleep(1000000);
     ia1_play(laby,freq,w,h,direction,ia1);
+    system("clear");
+    printf("\tz : haut\n"); 
+    printf("\tq : gauche\n"); 
+    printf("\ts : bas\n"); 
+    printf("\td : droite\n");
     show_laby(laby,w,h);
     compteur_deplacement++;
     //show_freq(freq, w, h, compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
-    usleep(1000000);
+    usleep(250000);
   }
   // on termine le thread
   int pthread_cancel(pthread_t thread1);
