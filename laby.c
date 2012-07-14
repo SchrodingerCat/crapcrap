@@ -16,6 +16,7 @@
 #include <pthread.h>
 #include "couleurs.h"
 #include "functions.h"
+#include "ia.h"
 
 #define w 32
 #define h 32
@@ -41,9 +42,9 @@ int main()
   laby = trace_obstacles(laby,w,h); 
   freq = fabrique_mat_frequence(laby,freq,w,h);
 
-  insere_ia_init(laby, freq, w, h, ia1);
+  ia1_init(laby, freq, w, h, ia1);
 
-  ia_premier_deplacement(laby, freq, w, h, ia1_old, ia1, direction);
+  ia1_premier_deplacement(laby, freq, w, h, ia1_old, ia1, direction);
 
   //insertion du joueur
   laby = joueur_insertion(laby, w, h, joueur);
