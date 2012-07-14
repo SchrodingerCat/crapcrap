@@ -27,15 +27,25 @@ int main()
   int** laby = init_mat(w,h);
   int** freq = init_mat(w,h); 
   //int position_vide;
-  int* direction = malloc(sizeof(int));
+  int* direction1 = malloc(sizeof(int));
+  int* direction2 = malloc(sizeof(int));
+
   int compteur_deplacement;
-  struct Coordonnees* ia1;
   struct Coordonnees* joueur; 
-  struct Coordonnees* ia1_old;
   struct Datas_ddr* datas1;
+
+  struct Coordonnees* ia1; 
+  struct Coordonnees* ia1_old;
+  
+  struct Coordonnees* ia2;
+  struct Coordonnees* ia2_old;
 
   ia1_old = init_struct_coord();
   ia1 = init_struct_coord();
+
+  ia2_old = init_struct_coord();
+  ia2 = init_struct_coord();
+  
   joueur = init_struct_coord();
   laby = init_mur(laby,w,h);
   laby = init_bord(laby,w,h);
@@ -43,8 +53,10 @@ int main()
   freq = fabrique_mat_frequence(laby,freq,w,h);
 
   ia1_init(laby, freq, w, h, ia1);
-
-  ia1_premier_deplacement(laby, freq, w, h, ia1_old, ia1, direction);
+  ia1_premier_deplacement(laby, freq, w, h, ia1_old, ia1, direction1);
+  
+  ia2_init(laby, freq, w, h, ia2);
+  ia2_premier_deplacement(laby, freq, w, h, ia2_old, ia2, direction2);
 
   //insertion du joueur
   laby = joueur_insertion(laby, w, h, joueur);
@@ -66,7 +78,9 @@ int main()
     // si le déplacement a changé alors:
     deplace_joueur(laby, w, h, datas1, datas1->direction);
 
-    ia1_play(laby,freq,w,h,direction,ia1);
+    ia1_play(laby,freq,w,h,direction1,ia1);
+    ia2_play(laby,freq,w,h,direction2,ia2);
+
     system("clear");
     printf("\tz : haut\n"); 
     printf("\tq : gauche\n"); 

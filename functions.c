@@ -106,11 +106,11 @@ void show_laby(int** laby, int w, int h)
       }
       else if(laby[i][j]==1) {
         couleur("47");
-        printf("M");
+        printf(" ");
       }
       else if(laby[i][j]==2) {
         couleur("47");
-        printf("B");
+        printf(" ");
       }
       else if(laby[i][j]==3) {
         couleur("42");
@@ -118,7 +118,11 @@ void show_laby(int** laby, int w, int h)
       }
       else if(laby[i][j]==4) {
         couleur("41");
-        printf("i");
+        printf("1");
+      }
+      else if(laby[i][j]==5) {
+        couleur("43");
+        printf("2");
       }
       couleur("0");
     }
@@ -527,7 +531,6 @@ struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position
   return data1;
 }
 
-
 /**
  * \fn void* demande_direction_relative(void* data)
  * \brief Fonction servant à capturer le déplacements que souhaite le joueur, en capturant les touches du clavier, cette fonction sera placée dans un thread
@@ -615,5 +618,3 @@ int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int dir
   }
   return laby;
 }
-
-

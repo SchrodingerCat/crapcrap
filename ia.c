@@ -225,3 +225,124 @@ void ia1_play(int** laby, int** freq, int w, int h,int* direction, struct Coordo
   freq = remplir_mat_frequence(freq,ia1->y,ia1->x);
 }
 
+/**
+ * \fn int ia2_init(int** laby, int** freq, int w, int h, struct Coordonnees* ia2)
+ * \brief Fonction qui insère une ia pour la première fois dans le labyrinthe
+ * \param laby
+ * \param freq
+ * \param w
+ * \param h
+ * \param ia2 
+ * \return 1 si l'ia a bien été insérée
+ */
+int ia2_init(int** laby, int** freq, int w, int h, struct Coordonnees* ia2)
+{
+  int position_vide = cherche_vide(laby,w,h);                       
+  ia2->y = position_vide%100;                                   
+  ia2->x = (position_vide-(position_vide%100))/100;             
+  laby = ia2_insere_dans_case(laby,w,h,ia2->y,ia2->x);           
+  freq = remplir_mat_frequence(freq,ia2->y,ia2->x);             
+  return 1;
+} 
+
+/**
+ * \fn int ia2_premier_deplacement(int** laby, int** freq, int w, int h, struct Coordonnees* ia2_old, struct Coordonnees* ia2, int* direction)
+ * \brief Fonction qui va effectuer le premier déplacement de l'ia
+ * \param laby adresse
+ * \param freq adresse
+ * \param w
+ * \param h
+ * \param ia2_old adresse 
+ * \param ia2 adresse
+ * \param direction adresse
+ * \return
+ */
+int ia2_premier_deplacement(int** laby, int** freq, int w, int h, struct Coordonnees* ia2_old, struct Coordonnees* ia2, int* direction)
+{
+  ia2_old->x = ia2->x;                                                    
+  ia2_old->y = ia2->y;                                                    
+  *direction = ia_cherche_deplacement(laby,ia2->y,ia2->x);                
+  laby = ia2_deplace(laby,w,h,ia2->y,ia2->x, *direction );                 
+  ia2->x = next_col(ia2_old->x, *direction);                              
+  ia2->y = next_line(ia2_old->y, *direction);                             
+  freq = remplir_mat_frequence(freq,ia2->y,ia2->x);                       
+  return 1;
+}
+
+/**
+ * \fn  int** ia2_insere_dans_case(int** laby, int w, int h, int pos_y, int pos_x)
+ * \brief Fonction qui insère une ia dans le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur de la matrice
+ * \param h taille en hauteur de la matrice
+ * \param pos_y ancien numéro de ligne
+ * \param pos_x ancien numéro de colonne
+ * \return l'adresse du labyrinthe contenant l'ia
+ */
+int** ia2_insere_dans_case(int** laby, int w, int h, int pos_y, int pos_x)
+{
+  laby[pos_y][pos_x] = 5;
+  return laby;
+}
+
+/**
+ * \fn int** ia2_deplace(int** laby, int w, int h, int old_y, int old_x, int direction)
+ * \brief Fonction qui déplace une fois une ia dans le labyrinthe
+ * \param laby adresse du labyrinthe
+ * \param w taille en largeur de la matrice
+ * \param h taille en hauteur de la matrice
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \param direction direction que doit prendre l'ia 
+ * \return l'adresse du labyrinthe une fois l'ia déplacée une fois
+ *
+ * La direction est notée telle que:
+ * 0 : haut
+ * 1 : droite
+ * 2 : bas
+ * 3 : gauche
+ */
+int** ia2_deplace(int** laby, int w, int h, int old_y, int old_x, int direction)
+{
+  laby[old_y][old_x] = 0;
+  if(direction == 0) {
+    //nord
+    laby = ia2_insere_dans_case(laby,w,h,old_y-1,old_x);
+  }
+  else if(direction == 1) {
+    //est
+    laby = ia2_insere_dans_case(laby,w,h,old_y,old_x+1);
+  }
+  else if(direction == 2) {
+    //sud
+    laby = ia2_insere_dans_case(laby,w,h,old_y+1,old_x);
+  }
+  else if(direction == 3) {
+    //ouest
+    laby = ia2_insere_dans_case(laby,w,h,old_y,old_x-1);
+  }
+  else{
+    printf("Mauvaise direction\n");
+  }
+  return laby;
+}
+
+/**
+ * \fn void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2)
+ * \brief Fonction qui permet à l'ia de proceder à un déplacement 
+ * \param laby adresse du labyrinthe
+ * \param freq adresse de la matrice des frequences
+ * \param w taille en largeur du labyrinthe
+ * \param h taille en hauteur du labyrinthe
+ * \param direction adresse de la direction de l'ia
+ * \param ia2 adresse de la position de l'ia2
+ */
+void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2)
+{
+  *direction = dir_relative_to_absolue(laby , *direction , ia_dir_relative(laby , ia2->y , ia2->x , *direction) );
+  laby = ia2_deplace(laby,w,h,ia2->y,ia2->x, *direction );
+  ia2->x = next_col(ia2->x, *direction);
+  ia2->y = next_line(ia2->y, *direction);
+  freq = remplir_mat_frequence(freq,ia2->y,ia2->x);
+}
+
