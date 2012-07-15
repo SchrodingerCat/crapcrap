@@ -9,5 +9,6 @@ int ia2_init(int** laby, int** freq, int w, int h, struct Coordonnees* ia2);
 int ia2_premier_deplacement(int** laby, int** freq, int w, int h, struct Coordonnees* ia2_old, struct Coordonnees* ia2, int* direction);
 int** ia2_insere_dans_case(int** laby, int w, int h, int pos_y, int pos_x);
 int** ia2_deplace(int** laby, int w, int h, int old_y, int old_x, int direction);
-void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2);
-
+void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2, struct Datas_ddr* datas1);
+int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int old_dir);
+int distance_entre_positions (struct Coordonnees* position1,struct Coordonnees* position2,struct Coordonnees* distances);

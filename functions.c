@@ -618,3 +618,4 @@ int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int dir
   }
   return laby;
 }
+

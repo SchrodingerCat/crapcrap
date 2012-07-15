@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
+#include <math.h>
 #include "couleurs.h"
 #include "functions.h"
 #include "ia.h"
@@ -328,21 +329,111 @@ int** ia2_deplace(int** laby, int w, int h, int old_y, int old_x, int direction)
 }
 
 /**
- * \fn void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2)
+ * \fn 
  * \brief Fonction qui permet à l'ia de proceder à un déplacement 
  * \param laby adresse du labyrinthe
- * \param freq adresse de la matrice des frequences
+ * \param freq2 adresse de la matrice des frequences
  * \param w taille en largeur du labyrinthe
  * \param h taille en hauteur du labyrinthe
  * \param direction adresse de la direction de l'ia
  * \param ia2 adresse de la position de l'ia2
+ * \param datas1 adresse...
  */
-void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2)
+void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordonnees* ia2, struct Datas_ddr* datas1)
 {
-  *direction = dir_relative_to_absolue(laby , *direction , ia_dir_relative(laby , ia2->y , ia2->x , *direction) );
+  *direction = ia2_direction(laby, datas1, ia2->y, ia2->x, *direction);
   laby = ia2_deplace(laby,w,h,ia2->y,ia2->x, *direction );
   ia2->x = next_col(ia2->x, *direction);
   ia2->y = next_line(ia2->y, *direction);
   freq = remplir_mat_frequence(freq,ia2->y,ia2->x);
+}
+
+/**
+ * \fn int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int old_dir)
+ * \brief Fonction qui recherche une direction relative pour l'ia1 en fonction de son précédent déplacement
+ * \param laby adresse du labyrinthe
+ * \param datas1 adresse des des données sur le joueur
+ * \param old_y ancien numéro de ligne
+ * \param old_x ancien numéro de colonne
+ * \param old_dir précédente direction 
+ * \param distances
+ * \return Direction du prochain déplacement
+ *
+ *
+ * ATTENTION: il faut que vérifie que l'ia peut se déplacer sans passer dans un mur!!
+ *
+*/
+int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int old_dir)
+{
+  int new_direction;
+  struct Coordonnees* position_joueur = init_struct_coord();
+  struct Coordonnees* position_ia = init_struct_coord();
+  struct Coordonnees* distances = init_struct_coord();
+  position_joueur->x = datas1->x_joueur;
+  position_joueur->y = datas1->y_joueur;
+  position_ia->x = old_x;
+  position_ia->y = old_y;
+
+  distance_entre_positions(position_joueur, position_ia, distances);
+  if(distances->x < 0) {
+    if(distances->y < 0) {
+      if(abs(distances->x) > abs(distances->y)) {
+        //gauche
+        new_direction = 3; 
+      }
+      else {
+        //haut
+        new_direction = 0;
+      }
+    }
+    else {
+      if(abs(distances->x) > abs(distances->y)) {
+        //gauche
+        new_direction = 3;
+      }
+      else {
+        //bas
+        new_direction = 2;
+      } 
+    }
+  }
+  else {
+    if(distances->y < 0) {
+      if(abs(distances->x) > abs(distances->y)) {
+        //droite
+        new_direction = 1;
+      }
+      else {
+        //haut
+        new_direction = 0;
+      } 
+    }
+    else {
+      if(abs(distances->x) > abs(distances->y)) {
+        //droite
+        new_direction = 1;
+      }
+      else {
+        //bas
+        new_direction = 2;
+      }
+    }
+  }
+  return new_direction;
+}
+
+  /**
+   * \fn 
+ * \brief Fonction qui calcule la distance (x,y) entre 2 points 
+ * \param position1
+ * \param position2
+ * \param distance
+ * \return 
+ */
+int distance_entre_positions (struct Coordonnees* position1,struct Coordonnees* position2,struct Coordonnees* distances)
+{
+  distances->x = position1->x - position2->x;
+  distances->y = position1->y - position2->y;
+  return EXIT_SUCCESS;
 }
 
