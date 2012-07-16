@@ -94,7 +94,7 @@ int main()
     compteur_deplacement++;
     //show_freq(freq, w, h, compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
-    usleep(100000);
+    usleep(500000);
   }
 
   // on termine le thread

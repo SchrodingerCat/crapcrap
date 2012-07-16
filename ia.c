@@ -362,10 +362,10 @@ void ia2_play(int** laby, int** freq, int w, int h,int* direction, struct Coordo
  *
  * ATTENTION: il faut que vérifie que l'ia peut se déplacer sans passer dans un mur!!
  *
-*/
+ */
 int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int old_dir)
 {
-  int new_direction;
+  int new_direction = 42;
   struct Coordonnees* position_joueur = init_struct_coord();
   struct Coordonnees* position_ia = init_struct_coord();
   struct Coordonnees* distances = init_struct_coord();
@@ -373,51 +373,112 @@ int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int
   position_joueur->y = datas1->y_joueur;
   position_ia->x = old_x;
   position_ia->y = old_y;
-
   distance_entre_positions(position_joueur, position_ia, distances);
-  if(distances->x < 0) {
-    if(distances->y < 0) {
-      if(abs(distances->x) > abs(distances->y)) {
-        //gauche
-        new_direction = 3; 
+  int my_ia_is_a_free_bi4tch = rand()%100;
+  if(my_ia_is_a_free_bi4tch < 70) {
+    if(distances->x < 0) {
+      if(distances->y < 0) {
+        if(abs(distances->x) > abs(distances->y)) {
+          //gauche
+          if(est_case_vide_avec_direction(laby, 3, position_ia->y, position_ia->x)) {
+            new_direction = 3; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 0, position_ia->y, position_ia->x)) {
+              new_direction = 0;
+            }
+          } 
+        }
+        else {
+          //haut
+          if(est_case_vide_avec_direction(laby, 0, position_ia->y, position_ia->x)) {
+            new_direction = 0; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 3, position_ia->y, position_ia->x)) {
+              new_direction = 3;
+            }
+          } 
+        }
       }
       else {
-        //haut
-        new_direction = 0;
+        if(abs(distances->x) > abs(distances->y)) {
+          //gauche
+          if(est_case_vide_avec_direction(laby, 3, position_ia->y, position_ia->x)) {
+            new_direction = 3; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 2, position_ia->y, position_ia->x)) {
+              new_direction = 2;
+            }
+          } 
+        }
+        else {
+          //bas
+          if(est_case_vide_avec_direction(laby, 2, position_ia->y, position_ia->x)) {
+            new_direction = 2; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 3, position_ia->y, position_ia->x)) {
+              new_direction = 3;
+            }
+          } 
+        } 
       }
     }
     else {
-      if(abs(distances->x) > abs(distances->y)) {
-        //gauche
-        new_direction = 3;
+      if(distances->y < 0) {
+        if(abs(distances->x) > abs(distances->y)) {
+          //droite
+          if(est_case_vide_avec_direction(laby, 1, position_ia->y, position_ia->x)) {
+            new_direction = 1; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 0, position_ia->y, position_ia->x)) {
+              new_direction = 0;
+            }
+          } 
+        }
+        else {
+          //haut
+          if(est_case_vide_avec_direction(laby, 0, position_ia->y, position_ia->x)) {
+            new_direction = 0; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 1, position_ia->y, position_ia->x)) {
+              new_direction = 1;
+            }
+          }
+        } 
       }
       else {
-        //bas
-        new_direction = 2;
-      } 
+        if(abs(distances->x) > abs(distances->y)) {
+          //droite
+          if(est_case_vide_avec_direction(laby, 1, position_ia->y, position_ia->x)) {
+            new_direction = 1; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 2, position_ia->y, position_ia->x)) {
+              new_direction = 2;
+            }
+          }
+        }
+        else {
+          //bas
+          if(est_case_vide_avec_direction(laby, 2, position_ia->y, position_ia->x)) {
+            new_direction = 2; 
+          }
+          else {
+            if(est_case_vide_avec_direction(laby, 1, position_ia->y, position_ia->x)) {
+              new_direction = 1;
+            }
+          }
+        }
+      }
     }
   }
-  else {
-    if(distances->y < 0) {
-      if(abs(distances->x) > abs(distances->y)) {
-        //droite
-        new_direction = 1;
-      }
-      else {
-        //haut
-        new_direction = 0;
-      } 
-    }
-    else {
-      if(abs(distances->x) > abs(distances->y)) {
-        //droite
-        new_direction = 1;
-      }
-      else {
-        //bas
-        new_direction = 2;
-      }
-    }
+  if(new_direction == 42) {
+   new_direction = ia_cherche_deplacement(laby,position_ia->y,position_ia->x); 
   }
   return new_direction;
 }
