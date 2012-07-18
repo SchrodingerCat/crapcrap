@@ -34,4 +34,5 @@ struct Coordonnees* init_struct_coord();
 struct Datas_ddr* init_struct_datas_ddr(int** laby, struct Coordonnees* position);
 void* demande_direction_relative(void*);
 int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int direction);
+int verif_distances_joueur_vs_ia (int** laby, struct Datas_ddr* position_joueur, struct Coordonnees* ia);
 

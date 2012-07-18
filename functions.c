@@ -619,3 +619,25 @@ int** deplace_joueur(int** laby, int w, int h, struct Datas_ddr* datas1, int dir
   return laby;
 }
 
+/**
+ * \fn int verif_distances_joueur_vs_ia (int** laby, struct Datas_ddr* position_joueur, struct Coordonnees* ia)
+ * \brief Fonction qui vérifie si la distance entre une ia et un joueur n'est pas proche de zéro
+ * \param laby adresse du labyrinthe
+ * \param joueur adresse de la structure contenant la position du joueur
+ * \param ia adresse de la structure contenant la position de l'ia
+ * \return 1 si l'ia est a moins de 2 cases du joueur
+ */
+int verif_distances_joueur_vs_ia (int** laby, struct Datas_ddr* position_joueur, struct Coordonnees* ia)
+{
+  struct Coordonnees* joueur = init_struct_coord();
+  struct Coordonnees* distances = init_struct_coord();
+  int test = 0;
+  joueur->y = position_joueur->y_joueur;
+  joueur->x = position_joueur->x_joueur;
+  distance_entre_positions(joueur, ia, distances);
+  //printf("dst: %d,%d", distances->y, distances->x);
+  if ((abs(distances->x) <= 1) && (abs(distances->y) <= 1)) {
+    test = 1;
+  }
+  return test;
+}

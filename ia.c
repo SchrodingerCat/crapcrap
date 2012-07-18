@@ -374,6 +374,7 @@ int ia2_direction(int** laby, struct Datas_ddr* datas1,int old_y, int old_x, int
   position_ia->x = old_x;
   position_ia->y = old_y;
   distance_entre_positions(position_joueur, position_ia, distances);
+  //printf("distance: %d,%di\n", distances->y, distances->x);
   int my_ia_is_a_free_bi4tch = rand()%100;
   if(my_ia_is_a_free_bi4tch < 70) {
     if(distances->x < 0) {

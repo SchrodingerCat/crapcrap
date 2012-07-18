@@ -24,6 +24,7 @@
 int main() 
 {
   srand(time(NULL));
+  int gagne = 0;
   int** laby = init_mat(w,h);
   int** freq1 = init_mat(w,h); 
   int** freq2 = init_mat(w,h); 
@@ -77,15 +78,15 @@ int main()
   // on lance le thread
   pthread_create(&thread1, NULL, demande_direction_relative, datas1);
   
-  while(compteur_deplacement<10000) {
+  int test_ia1 = 0;
+  int test_ia2 = 0;
+  while(!((compteur_deplacement > 10000)||(gagne == 1))) {
    
+    system("clear");
     // si le déplacement a changé alors:
     deplace_joueur(laby, w, h, datas1, datas1->direction);
-
     ia1_play(laby, freq1, w, h, direction1, ia1);
     ia2_play(laby, freq2, w, h, direction2, ia2, datas1);
-
-    system("clear");
     printf("\tz : haut\n"); 
     printf("\tq : gauche\n"); 
     printf("\ts : bas\n"); 
@@ -94,13 +95,18 @@ int main()
     compteur_deplacement++;
     //show_freq(freq, w, h, compteur_deplacement);
     printf("déplacements : %d\n", compteur_deplacement);
+    test_ia1 = verif_distances_joueur_vs_ia(laby, datas1, ia1);
+    test_ia2 = verif_distances_joueur_vs_ia(laby, datas1, ia2);
+    if (test_ia1 || test_ia2) {
+      gagne = 1;
+      printf("Wo0t!! vous êtes un noob !!\n");
+    }
     usleep(500000);
   }
-
   // on termine le thread
   int pthread_cancel(pthread_t thread1);
   
-  show_freq(freq1, w, h, compteur_deplacement);
-  show_freq(freq2, w, h, compteur_deplacement);
+  //show_freq(freq1, w, h, compteur_deplacement);
+  //show_freq(freq2, w, h, compteur_deplacement);
   return 0;
 }
